@@ -1,0 +1,9 @@
+nav header {
+background: lightseagreen;
+padding: 10px;
+}
+
+nav header a{
+    color: white;
+    text-decoration: none;
+}

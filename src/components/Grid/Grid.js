@@ -1,23 +1,60 @@
-import './Grid.css';
+import "./Grid.css";
+import PropTypes from "prop-types";
 
-function Grid({data: {header = [], values = [], actions = []}}) {
+function Grid({
+  data: { header = [], values = [], actions = [], customColumns = [] },
+}) {
   return (
-    <table className='gridTable'>
+    <table className="gridTable">
       <thead>
         <tr>
-          {header.map(colName => <th key={colName}>{colName}</th>)}
+          {header.map((colName) => (
+            <th key={colName.label}>
+              {colName.label}:{colName.type}
+            </th>
+          ))}
+          {customColumns.map((colName) => (
+            <th key={colName.label}>
+              {colName.label}:{colName.type}
+            </th>
+          ))}
           {!!actions.length && <th>Actions</th>}
         </tr>
       </thead>
       <tbody>
         {values.map((row, index) => (
           <tr key={index}>
-            {header.map((colName) => <td key={colName}>{row[colName]}</td>)}
-            {!!actions.length && 
-              <td className='gridActions'>
-                {actions.map(({label, action}) => <button onClick={() => action(row)}>{label}</button>)}
+            {header.map((colName) => (
+              <td
+                className={
+                  !isNaN(row[colName.label]) ? "right-aligned-text" : ""
+                }
+                key={colName.label}
+              >
+                {row[colName.label]}
               </td>
-            }
+            ))}
+            {customColumns.map((colName) => (
+              <td
+                className={
+                  !isNaN(row[colName.label].length) ? "right-aligned-text" : ""
+                }
+                key={colName.label}
+              >
+                {row[colName.label].length}
+              </td>
+            ))}
+            {!!actions.length && (
+              <td className="gridActions">
+                {actions.map(({ label, action, hideIfEmpty = "" }) =>
+                  hideIfEmpty && row[hideIfEmpty].length === 0 ? null : (
+                    <button key={label} onClick={() => action(row)}>
+                      {label}
+                    </button>
+                  )
+                )}
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
@@ -26,3 +63,10 @@ function Grid({data: {header = [], values = [], actions = []}}) {
 }
 
 export default Grid;
+
+Grid.propTypes = {
+  header: PropTypes.array,
+  values: PropTypes.array,
+  actions: PropTypes.array,
+  customColumns: PropTypes.array,
+};

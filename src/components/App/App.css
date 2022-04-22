@@ -1,3 +1,12 @@
 .App {
   text-align: center;
+  overflow: auto;
+}
+
+.alert-container{
+  text-align: center;
+}
+.alert-container div {
+  margin:10px auto;
+  width: 30%;
 }

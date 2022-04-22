@@ -1,225 +1,201 @@
-import './Planets.css';
+import "./Planets.css";
+import PropTypes  from "prop-types";
 
-import Grid from '../Grid';
+import Grid from "../Grid";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Spinner,
+} from "reactstrap";
 
-function Planets() {
+function Planets({ additionalColumns = [], setShowToast = () => {} }) {
+  const [planets, setPlanets] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+
+  useEffect(() => {
+    async function fetchPlanets() {
+      try {
+        setLoading(true);
+        let response = await fetch("https://swapi.dev/api/planets/");
+        response = await response.json();
+        setPlanets(response);
+      } catch (err) {
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPlanets();
+  }, []);
 
   const data = {
+    customColumns: additionalColumns,
     header: [
-      'name',
-      'rotation_period',
-      'orbital_period',
-      'diameter',
-      'climate',
-      'gravity',
-      'terrain',
-      'surface_water',
-      'population'
+      { label: "name", type: "string" },
+      { label: "rotation_period", type: "number" },
+      { label: "orbital_period", type: "number" },
+      { label: "diameter", type: "number" },
+      { label: "climate", type: "string" },
+      { label: "gravity", type: "string" },
+      { label: "terrain", type: "string" },
+      { label: "surface_water", type: "number" },
+      { label: "population", type: "number" },
     ],
-    values: [
-      {
-        'name': 'Tatooine',
-        'rotation_period': '23',
-        'orbital_period': '304',
-        'diameter': '10465',
-        'climate': 'arid',
-        'gravity': '1 standard',
-        'terrain': 'desert',
-        'surface_water': '1',
-        'population': '200000',
-        'residents': [
-          'http://swapi.dev/api/people/1/',
-          'http://swapi.dev/api/people/2/',
-          'http://swapi.dev/api/people/4/',
-          'http://swapi.dev/api/people/6/',
-          'http://swapi.dev/api/people/7/',
-          'http://swapi.dev/api/people/8/',
-          'http://swapi.dev/api/people/9/',
-          'http://swapi.dev/api/people/11/',
-          'http://swapi.dev/api/people/43/',
-          'http://swapi.dev/api/people/62/'
-        ],
-        'films': [
-          'http://swapi.dev/api/films/1/',
-          'http://swapi.dev/api/films/3/',
-          'http://swapi.dev/api/films/4/',
-          'http://swapi.dev/api/films/5/',
-          'http://swapi.dev/api/films/6/'
-        ],
-        'created': '2014-12-09T13:50:49.641000Z',
-        'edited': '2014-12-20T20:58:18.411000Z',
-        'url': 'http://swapi.dev/api/planets/1/'
-      },
-      {
-        'name': 'Alderaan',
-        'rotation_period': '24',
-        'orbital_period': '364',
-        'diameter': '12500',
-        'climate': 'temperate',
-        'gravity': '1 standard',
-        'terrain': 'grasslands, mountains',
-        'surface_water': '40',
-        'population': '2000000000',
-        'residents': [
-          'http://swapi.dev/api/people/5/',
-          'http://swapi.dev/api/people/68/',
-          'http://swapi.dev/api/people/81/'
-        ],
-        'films': [
-          'http://swapi.dev/api/films/1/',
-          'http://swapi.dev/api/films/6/'
-        ],
-        'created': '2014-12-10T11:35:48.479000Z',
-        'edited': '2014-12-20T20:58:18.420000Z',
-        'url': 'http://swapi.dev/api/planets/2/'
-      },
-      {
-        'name': 'Yavin IV',
-        'rotation_period': '24',
-        'orbital_period': '4818',
-        'diameter': '10200',
-        'climate': 'temperate, tropical',
-        'gravity': '1 standard',
-        'terrain': 'jungle, rainforests',
-        'surface_water': '8',
-        'population': '1000',
-        'residents': [],
-        'films': [
-          'http://swapi.dev/api/films/1/'
-        ],
-        'created': '2014-12-10T11:37:19.144000Z',
-        'edited': '2014-12-20T20:58:18.421000Z',
-        'url': 'http://swapi.dev/api/planets/3/'
-      },
-      {
-        'name': 'Hoth',
-        'rotation_period': '23',
-        'orbital_period': '549',
-        'diameter': '7200',
-        'climate': 'frozen',
-        'gravity': '1.1 standard',
-        'terrain': 'tundra, ice caves, mountain ranges',
-        'surface_water': '100',
-        'population': 'unknown',
-        'residents': [],
-        'films': [
-          'http://swapi.dev/api/films/2/'
-        ],
-        'created': '2014-12-10T11:39:13.934000Z',
-        'edited': '2014-12-20T20:58:18.423000Z',
-        'url': 'http://swapi.dev/api/planets/4/'
-      },
-      {
-        'name': 'Dagobah',
-        'rotation_period': '23',
-        'orbital_period': '341',
-        'diameter': '8900',
-        'climate': 'murky',
-        'gravity': 'N/A',
-        'terrain': 'swamp, jungles',
-        'surface_water': '8',
-        'population': 'unknown',
-        'residents': [],
-        'films': [
-          'http://swapi.dev/api/films/2/',
-          'http://swapi.dev/api/films/3/',
-          'http://swapi.dev/api/films/6/'
-        ],
-        'created': '2014-12-10T11:42:22.590000Z',
-        'edited': '2014-12-20T20:58:18.425000Z',
-        'url': 'http://swapi.dev/api/planets/5/'
-      },
-      {
-        'name': 'Bespin',
-        'rotation_period': '12',
-        'orbital_period': '5110',
-        'diameter': '118000',
-        'climate': 'temperate',
-        'gravity': '1.5 (surface), 1 standard (Cloud City)',
-        'terrain': 'gas giant',
-        'surface_water': '0',
-        'population': '6000000',
-        'residents': [
-          'http://swapi.dev/api/people/26/'
-        ],
-        'films': [
-          'http://swapi.dev/api/films/2/'
-        ],
-        'created': '2014-12-10T11:43:55.240000Z',
-        'edited': '2014-12-20T20:58:18.427000Z',
-        'url': 'http://swapi.dev/api/planets/6/'
-      },
-      {
-        'name': 'Endor',
-        'rotation_period': '18',
-        'orbital_period': '402',
-        'diameter': '4900',
-        'climate': 'temperate',
-        'gravity': '0.85 standard',
-        'terrain': 'forests, mountains, lakes',
-        'surface_water': '8',
-        'population': '30000000',
-        'residents': [
-          'http://swapi.dev/api/people/30/'
-        ],
-        'films': [
-          'http://swapi.dev/api/films/3/'
-        ],
-        'created': '2014-12-10T11:50:29.349000Z',
-        'edited': '2014-12-20T20:58:18.429000Z',
-        'url': 'http://swapi.dev/api/planets/7/'
-      },
-      {
-        'name': 'Naboo',
-        'rotation_period': '26',
-        'orbital_period': '312',
-        'diameter': '12120',
-        'climate': 'temperate',
-        'gravity': '1 standard',
-        'terrain': 'grassy hills, swamps, forests, mountains',
-        'surface_water': '12',
-        'population': '4500000000',
-        'residents': [
-          'http://swapi.dev/api/people/3/',
-          'http://swapi.dev/api/people/21/',
-          'http://swapi.dev/api/people/35/',
-          'http://swapi.dev/api/people/36/',
-          'http://swapi.dev/api/people/37/',
-          'http://swapi.dev/api/people/38/',
-          'http://swapi.dev/api/people/39/',
-          'http://swapi.dev/api/people/42/',
-          'http://swapi.dev/api/people/60/',
-          'http://swapi.dev/api/people/61/',
-          'http://swapi.dev/api/people/66/'
-        ],
-        'films': [
-          'http://swapi.dev/api/films/3/',
-          'http://swapi.dev/api/films/4/',
-          'http://swapi.dev/api/films/5/',
-          'http://swapi.dev/api/films/6/'
-        ],
-        'created': '2014-12-10T11:52:31.066000Z',
-        'edited': '2014-12-20T20:58:18.430000Z',
-        'url': 'http://swapi.dev/api/planets/8/'
-      }
-    ],
+    values: planets?.results || [],
     actions: [
       {
-        label: 'Go to Films',
-        action: (row) => { console.log(`redirect to grid with ${row.films.length} Films`)}
+        label: "Go to Films",
+        action: (row) => {
+          history.push({
+            pathname: `${row.name}/films`,
+            state: { films: row.films },
+          });
+        },
+        hideIfEmpty: "films",
       },
       {
-        label: 'Go to Residents',
-        action: (row) => { console.log(`redirect to grid with ${row.residents.length} Residents`)}
-      }
-    ]
-  }
+        label: "Go to Residents",
+        action: (row) => {
+          history.push({
+            pathname: `${row.name}/residents`,
+            state: { residents: row.residents },
+          });
+        },
+        hideIfEmpty: "residents",
+      },
+      {
+        label: "Add Planet",
+        action: (row) => {
+          setShowModal(true);
+        },
+      },
+      {
+        label: "Planet Details",
+        action: (row) => {
+          history.push({
+            pathname: `${row.name}/details`,
+            state: { details: row },
+          });
+        },
+      },
+    ],
+  };
+
+  const toggleHandler = () => {
+    setShowModal((prev) => !prev);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setShowModal(false);
+    setShowToast(true);
+  };
 
   return (
-    <div className='App'>
-      <Grid data={data} />
-    </div>
+    <>
+      <div className="App">
+        {loading ? (
+          <Spinner>Loading...</Spinner>
+        ) : (
+          <>
+            <Grid data={data} />
+            <Modal isOpen={showModal} toggle={toggleHandler}>
+              <ModalHeader toggle={toggleHandler}>Add Planet</ModalHeader>
+              <ModalBody>
+                <Form action="/" onSubmit={handleFormSubmit}>
+                  <FormGroup>
+                    <Label for="name">Name</Label>
+                    <Input type="text" name="name" id="name" required />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="rotation_period">rotation_period</Label>
+                    <Input
+                      type="number"
+                      name="rotation_period"
+                      id="rotation_period"
+                      required
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="orbital_period">orbital_period</Label>
+                    <Input
+                      type="number"
+                      name="orbital_period"
+                      id="orbital_period"
+                      required
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="diameter">diameter</Label>
+                    <Input
+                      type="number"
+                      name="diameter"
+                      id="diameter"
+                      required
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="climate">climate</Label>
+                    <Input type="text" name="climate" id="climate" required />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="gravity">gravity</Label>
+                    <Input type="text" name="gravity" id="gravity" required />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="terrain">terrain</Label>
+                    <Input type="select" name="terrain" id="terrain" required>
+                      <option>desert</option>
+                      <option>grasslands</option>
+                      <option>mountains</option>
+                      <option>jungle</option>
+                      <option>lakes</option>
+                    </Input>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="surface_water">surface_water</Label>
+                    <Input
+                      type="number"
+                      name="surface_water"
+                      id="surface_water"
+                      required
+                    />
+                  </FormGroup>
+                  <div className="modal-footer">
+                    <Button color="primary" type="submit">
+                      Submit
+                    </Button>{" "}
+                    <Button
+                      color="secondary"
+                      type="button"
+                      onClick={toggleHandler}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </Form>
+              </ModalBody>
+            </Modal>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 
 export default Planets;
+
+Planets.propTypes = {
+  additionalColumns : PropTypes.array ,
+  setShowToast: PropTypes.func
+}
