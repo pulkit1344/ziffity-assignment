@@ -1,5 +1,6 @@
 import "./Grid.css";
 import PropTypes from "prop-types";
+import { Button } from "reactstrap";
 
 function Grid({
   data: { header = [], values = [], actions = [], customColumns = [] },
@@ -48,9 +49,9 @@ function Grid({
               <td className="gridActions">
                 {actions.map(({ label, action, hideIfEmpty = "" }) =>
                   hideIfEmpty && row[hideIfEmpty].length === 0 ? null : (
-                    <button key={label} onClick={() => action(row)}>
+                    <Button key={label} onClick={() => action(row)}>
                       {label}
-                    </button>
+                    </Button>
                   )
                 )}
               </td>
